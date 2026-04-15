@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACMIA Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWix+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkR4j8R+8WfA1Nf5Gk5nY8R8m2N4fGg8f3NQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-2: #111d36;
+      --surface: rgba(255, 255, 255, 0.08);
+      --surface-2: rgba(255, 255, 255, 0.14);
+      --text: #e7eefb;
+      --muted: #9fb0cc;
+      --primary: #00c896;
+      --accent: #38bdf8;
+      --warn: #f59e0b;
+      --danger: #fb7185;
+      --radius: 18px;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(1200px 700px at 5% 10%, rgba(56, 189, 248, 0.18), transparent 60%),
+                  radial-gradient(900px 600px at 95% 85%, rgba(0, 200, 150, 0.22), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .deck {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      width: 3500vw;
+      height: 100vh;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      padding: clamp(24px, 3vw, 42px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: 0.45s ease;
+    }
+
+    .slide.active .slide-header,
+    .slide.active .content,
+    .slide.active .slide-footer {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .title-chip {
+      background: linear-gradient(90deg, rgba(0, 200, 150, 0.25), rgba(56, 189, 248, 0.22));
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #d7f5ff;
+      font-weight: 600;
+    }
+
+    .slide-count {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .content {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: 0.55s ease 0.1s;
+      display: grid;
+      align-content: center;
+      gap: 18px;
+      min-height: 0;
+    }
+
+    .slide-footer {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: 0.45s ease 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: Poppins, Inter, sans-serif;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4.6vw, 4.8rem);
+      font-weight: 800;
+    }
+
+    h2 {
+      font-size: clamp(1.45rem, 2.9vw, 2.8rem);
+      font-weight: 700;
+    }
+
+    h3 {
+      font-size: clamp(1rem, 1.6vw, 1.4rem);
+      font-weight: 600;
+      color: #dbecff;
+    }
+
+    p,
+    li {
+      color: #c8d6ee;
+      font-size: clamp(0.95rem, 1.15vw, 1.15rem);
+      line-height: 1.55;
+    }
+
+    ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    li::before {
+      content: "\f058";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      color: var(--primary);
+      margin-right: 10px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .highlight {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .accent {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.5);
+    }
+
+    .kpi {
+      font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+      font-weight: 800;
+      color: #f5fdff;
+      margin-top: 6px;
+    }
+
+    .icon-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: inline-grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(0, 200, 150, 0.28), rgba(56, 189, 248, 0.3));
+      color: #d5f9ff;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .hero {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(12, 16, 35, 0.82), rgba(15, 23, 42, 0.72)),
+        radial-gradient(500px 280px at 70% 30%, rgba(0, 200, 150, 0.25), transparent 65%),
+        radial-gradient(500px 280px at 35% 75%, rgba(56, 189, 248, 0.28), transparent 70%),
+        linear-gradient(45deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
+      z-index: -1;
+    }
+
+    .cover-lines {
+      position: absolute;
+      right: -12vw;
+      top: 12vh;
+      width: 54vw;
+      height: 54vw;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      box-shadow: inset 0 0 80px rgba(56, 189, 248, 0.14);
+      transform: rotate(12deg);
+      z-index: -1;
+    }
+
+    .cover-lines::before,
+    .cover-lines::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.16);
+      inset: 12%;
+    }
+
+    .cover-lines::after {
+      inset: 26%;
+    }
+
+    .title-block {
+      max-width: 860px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .subtitle {
+      font-size: clamp(1rem, 1.5vw, 1.35rem);
+      color: #b7d9ff;
+      font-weight: 500;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .meta-pill {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #d3e6ff;
+    }
+
+    .pipeline,
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .node {
+      min-width: 140px;
+      text-align: center;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+      color: #eaf5ff;
+    }
+
+    .arrow {
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 22px;
+    }
+
+    .nn-diagram {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .layer {
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+    }
+
+    .neuron {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow: 0 0 14px rgba(0, 200, 150, 0.45);
+    }
+
+    .connector {
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .tiny {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill {
+      padding: 10px 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 13px;
+      color: #d5e7ff;
+    }
+
+    .progress-wrap {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.12);
+      z-index: 4;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.4s ease;
+    }
+
+    .controls {
+      position: fixed;
+      right: 18px;
+      bottom: 16px;
+      display: flex;
+      gap: 10px;
+      z-index: 5;
+    }
+
+    .btn {
+      border: none;
+      background: rgba(15, 23, 42, 0.72);
+      color: #e9f3ff;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: rgba(56, 189, 248, 0.2);
+    }
+
+    .canvas-wrap {
+      position: relative;
+      min-height: 220px;
+      max-height: 360px;
+      height: 32vh;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      padding: 10px;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .slider-visual {
+      display: grid;
+      gap: 12px;
+    }
+
+    .slider-row {
+      display: grid;
+      gap: 4px;
+    }
+
+    .slider-row input[type="range"] {
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      outline: none;
+    }
+
+    .compare {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .compare .card {
+      flex: 1;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0, 200, 150, 0.16);
+      border: 1px solid rgba(0, 200, 150, 0.45);
+      color: #c6ffef;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      width: max-content;
+    }
+
+    @media (max-width: 960px) {
+      .grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-2,
+      .compare {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .nn-diagram {
+        grid-template-columns: 1fr;
+      }
+
+      .connector,
+      .arrow {
+        display: none;
+      }
+
+      .slide {
+        padding: 18px;
+      }
+
+      .controls {
+        right: 10px;
+        bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" id="deck">
+    <section class="slide active" id="slide-1">
+      <div class="hero"></div>
+      <div class="cover-lines"></div>
+      <div class="slide-header">
+        <span class="title-chip">Predictive Analytics Project</span>
+        <span class="slide-count">01 / 35</span>
+      </div>
+      <div class="content">
+        <div class="title-block">
+          <h1>AUTONOMOUS CROP MARKET<br/>INTELLIGENCE AGENT</h1>
+          <p class="subtitle">AI-powered Agriculture Intelligence System</p>
+          <div class="meta-row">
+            <span class="meta-pill"><i class="fa-solid fa-user"></i> Sahas Nagar</span>
+            <span class="meta-pill"><i class="fa-solid fa-id-card"></i> PRN: [ADD YOUR PRN]</span>
+            <span class="meta-pill"><i class="fa-solid fa-book-open"></i> Subject: Predictive Analytics</span>
+            <span class="meta-pill"><i class="fa-solid fa-chalkboard-user"></i> Guide: Prof. Shubhangi Kale</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Academic Evaluation Deck</span>
+        <span>ACMIA</span>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-2">
+      <div class="slide-header"><span class="title-chip">02 Problem Statement</span><span class="slide-count">02 / 35</span></div>
+      <div class="content grid-2">
+        <div class="card">
+          <span class="icon-badge"><i class="fa-solid fa-seedling"></i></span>
+          <h2>Crop Selection is Uncertain</h2>
+          <p>Farmers often select crops using legacy intuition instead of dynamic market intelligence.</p>
+        </div>
+        <div class="card">
+          <span class="icon-badge"><i class="fa-solid fa-clock"></i></span>
+          <h2>Sell Timing is Risky</h2>
+          <p>Price volatility makes decision timing difficult, resulting in lower bargaining power and revenue loss.</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Core Problem</span><span>Decision Friction</span></div>
+    </section>
+
+    <section class="slide" id="slide-3">
+      <div class="slide-header"><span class="title-chip">03 Why This Matters</span><span class="slide-count">03 / 35</span></div>
+      <div class="content grid-2">
+        <div>
+          <h2>Agriculture is India's Backbone</h2>
+          <ul>
+            <li>Millions depend on agriculture-linked income.</li>
+            <li>Market intelligence can reduce price uncertainty.</li>
+            <li>Data-driven farming enables resilient livelihoods.</li>
+          </ul>
+        </div>
+        <div class="canvas-wrap"><canvas id="chartMatters"></canvas></div>
+      </div>
+      <div class="slide-footer"><span>Need for Intelligence</span><span>Impact-Oriented AI</span></div>
+    </section>
+
+    <section class="slide" id="slide-4">
+      <div class="slide-header"><span class="title-chip">04 Project Objective</span><span class="slide-count">04 / 35</span></div>
+      <div class="content compare">
+        <div class="card">
+          <span class="badge">Objective 1</span>
+          <h2>Predict Profitable Crops</h2>
+          <p>Use historical pricing patterns to identify crops likely to yield better returns.</p>
+        </div>
+        <div class="card">
+          <span class="badge">Objective 2</span>
+          <h2>Recommend Selling Time</h2>
+          <p>Generate timely market action signals: <span class="highlight">SELL</span> or <span class="accent">HOLD</span>.</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Dual Objective System</span><span>Profit + Timing</span></div>
+    </section>
+
+    <section class="slide" id="slide-5">
+      <div class="slide-header"><span class="title-chip">05 System Overview</span><span class="slide-count">05 / 35</span></div>
+      <div class="content">
+        <h2>End-to-End Intelligence Pipeline</h2>
+        <div class="pipeline">
+          <div class="node">Data</div><div class="arrow">→</div>
+          <div class="node">Preprocessing</div><div class="arrow">→</div>
+          <div class="node">ANN Models</div><div class="arrow">→</div>
+          <div class="node">Prediction</div><div class="arrow">→</div>
+          <div class="node">Recommendation</div>
+        </div>
+        <div class="grid-3">
+          <div class="card"><h3><i class="fa-solid fa-database"></i> Inputs</h3><p>Historical market prices and commodity metadata.</p></div>
+          <div class="card"><h3><i class="fa-solid fa-brain"></i> Intelligence</h3><p>ANN/DNN and classical ML models for robust decisioning.</p></div>
+          <div class="card"><h3><i class="fa-solid fa-bullseye"></i> Output</h3><p>Actionable market signal for farmer decisions.</p></div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Core Architecture</span><span>Data to Decision</span></div>
+    </section>
+
+    <section class="slide" id="slide-6">
+      <div class="slide-header"><span class="title-chip">06 Dataset Overview</span><span class="slide-count">06 / 35</span></div>
+      <div class="content grid-2">
+        <div class="grid-2">
+          <div class="card"><h3>Source</h3><div class="kpi">AGMARKNET</div></div>
+          <div class="card"><h3>Records</h3><div class="kpi">8578</div></div>
+          <div class="card"><h3>States</h3><div class="kpi">21</div></div>
+          <div class="card"><h3>Commodities</h3><div class="kpi">143</div></div>
+        </div>
+        <div class="canvas-wrap"><canvas id="chartDataset"></canvas></div>
+      </div>
+      <div class="slide-footer"><span>Data Breadth</span><span>Geographic + Commodity Diversity</span></div>
+    </section>
+
+    <section class="slide" id="slide-7">
+      <div class="slide-header"><span class="title-chip">07 Features Used</span><span class="slide-count">07 / 35</span></div>
+      <div class="content grid-2">
+        <div class="card">
+          <h2>Selected Inputs</h2>
+          <ul>
+            <li><span class="highlight">min_price</span></li>
+            <li><span class="highlight">max_price</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>Why These Features?</h2>
+          <p>They tightly bound market volatility and strongly explain the central trend of modal pricing, making them high-signal predictors.</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Feature Engineering</span><span>Signal-rich Variables</span></div>
+    </section>
+
+    <section class="slide" id="slide-8">
+      <div class="slide-header"><span class="title-chip">08 Target Variable</span><span class="slide-count">08 / 35</span></div>
+      <div class="content grid-2">
+        <div class="card">
+          <h2>Binary Classification</h2>
+          <div class="pill-row">
+            <span class="pill">0 = Low Price</span>
+            <span class="pill">1 = High Price</span>
+          </div>
+          <p class="muted">Threshold rule simplifies market actionability.</p>
+        </div>
+        <div class="card">
+          <h2>Threshold</h2>
+          <p class="kpi">₹3600</p>
+          <p>Modal price above threshold indicates high-value market state.</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Target Design</span><span>Clear Class Boundary</span></div>
+    </section>
+
+    <section class="slide" id="slide-9">
+      <div class="slide-header"><span class="title-chip">09 Data Preprocessing</span><span class="slide-count">09 / 35</span></div>
+      <div class="content grid-4">
+        <div class="card"><span class="icon-badge"><i class="fa-solid fa-filter-circle-xmark"></i></span><h3>Missing Values</h3><p>Handled to ensure training stability.</p></div>
+        <div class="card"><span class="icon-badge"><i class="fa-solid fa-tags"></i></span><h3>Label Encoding</h3><p>Categorical variables transformed numerically.</p></div>
+        <div class="card"><span class="icon-badge"><i class="fa-solid fa-gauge-high"></i></span><h3>Standardization</h3><p>Features scaled for optimized convergence.</p></div>
+        <div class="card"><span class="icon-badge"><i class="fa-solid fa-code-branch"></i></span><h3>Train-Test Split</h3><p>Generalization assessed on unseen data.</p></div>
+      </div>
+      <div class="slide-footer"><span>Model Readiness</span><span>Reliable Input Pipeline</span></div>
+    </section>
+
+    <section class="slide" id="slide-10">
+      <div class="slide-header"><span class="title-chip">10 Model Architectures Intro</span><span class="slide-count">10 / 35</span></div>
+      <div class="content">
+        <h2>Multi-Model Intelligence Stack</h2>
+        <p>ACMIA evaluates both neural and classical approaches to identify the best model family for tabular commodity data.</p>
+        <div class="grid-3">
+          <div class="card"><h3>Shallow Neural</h3><p>Perceptron and compact MLP baselines.</p></div>
+          <div class="card"><h3>Deep Neural</h3><p>DNN with regularization and training controls.</p></div>
+          <div class="card"><h3>Classical ML</h3><p>Tree ensembles and distance-based classifiers.</p></div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Comparative Modeling</span><span>Best-fit Selection</span></div>
+    </section>
+
+    <section class="slide" id="slide-11">
+      <div class="slide-header"><span class="title-chip">11 ANN Model 1</span><span class="slide-count">11 / 35</span></div>
+      <div class="content grid-2">
+        <div>
+          <h2>Perceptron</h2>
+          <p>Single-layer linear classifier for baseline binary separation.</p>
+          <ul>
+            <li>Fast training</li>
+            <li>Interpretable decision boundary</li>
+            <li>Useful benchmark baseline</li>
+          </ul>
+        </div>
+        <div class="card nn-diagram">
+          <div class="layer"><div class="neuron"></div><div class="neuron"></div><div class="neuron"></div></div>
+          <div class="connector"></div>
+          <div class="layer"><div class="neuron"></div></div>
+          <div class="connector"></div>
+          <div class="layer"><div class="neuron"></div></div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Model 1</span><span>Linear Baseline</span></div>
+    </section>
+
+    <section class="slide" id="slide-12">
+      <div class="slide-header"><span class="title-chip">12 ANN Model 2</span><span class="slide-count">12 / 35</span></div>
+      <div class="content grid-2">
+        <div>
+          <h2>MLP (Backpropagation)</h2>
+          <p>Two hidden layers <span class="highlight">(4,4)</span> with <span class="accent">ReLU</span> activation for non-linear pattern capture.</p>
+          <ul>
+            <li>Learns richer feature interactions</li>
+            <li>Backprop enables iterative error minimization</li>
+          </ul>
+        </div>
+        <div class="card nn-diagram">
+          <div class="layer"><div class="neuron"></div><div class="neuron"></div></div>
+          <div class="connector"></div>
+          <div class="layer"><div class="neuron"></div><div class="neuron"></div><div class="neuron"></div><div class="neuron"></div></div>
+          <div class="connector"></div>
+          <div class="layer"><div class="neuron"></div><div class="neuron"></div><div class="neuron"></div><div class="neuron"></div></div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Model 2</span><span>Backprop MLP</span></div>
+    </section>
+
+    <section class="slide" id="slide-13">
+      <div class="slide-header"><span class="title-chip">13 ANN Model 3</span><span class="slide-count">13 / 35</span></div>
+      <div class="content grid-2">
+        <div>
+          <h2>Feedforward Neural Network</h2>
+          <p>Multi-layer forward-only architecture for robust representation learning over commodity-price patterns.</p>
+          <ul>
+            <li>Hierarchical features</li>
+            <li>Flexible depth-width tradeoff</li>
+          </ul>
+        </div>
+        <div class="card nn-diagram">
+          <div class="layer"><div class="neuron"></div><div class="neuron"></div><div class="neuron"></div></div>
+          <div class="connector"></div>
+          <div class="layer"><div class="neuron"></div><div class="neuron"></div><div class="neuron"></div><div class="neuron"></div><div class="neuron"></div></div>
+          <div class="connector"></div>
+          <div class="layer"><div class="neuron"></div><div class="neuron"></div></div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Model 3</span><span>Deep Feedforward</span></div>
+    </section>
+
+    <section class="slide" id="slide-14">
+      <div class="slide-header"><span class="title-chip">14 ANN Model 4</span><span class="slide-count">14 / 35</span></div>
+      <div class="content grid-2">
+        <div>
+          <h2>Custom Feedback Neural Network</h2>
+          <p>Sigmoid-based learning architecture integrating feedback for adaptive price-state refinement.</p>
+          <ul>
+            <li>Adaptive correction loop</li>
+            <li>Useful for iterative decision confidence</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="flow">
+            <div class="node">Input</div><div class="arrow">→</div><div class="node">Hidden</div><div class="arrow">→</div><div class="node">Output</div><div class="arrow">↺</div><div class="node">Feedback</div>
+          </div>
+          <p class="tiny" style="margin-top: 12px;">Sigmoid gating controls feedback intensity during learning.</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Model 4</span><span>Feedback Learning</span></div>
+    </section>
+
+    <section class="slide" id="slide-15">
+      <div class="slide-header"><span class="title-chip">15 ANN Architecture (Main)</span><span class="slide-count">15 / 35</span></div>
+      <div class="content">
+        <h2>Main ANN Topology</h2>
+        <div class="pipeline">
+          <div class="node">Input</div><div class="arrow">→</div>
+          <div class="node">128</div><div class="arrow">→</div>
+          <div class="node">64</div><div class="arrow">→</div>
+          <div class="node">32</div><div class="arrow">→</div>
+          <div class="node">Output</div>
+        </div>
+        <div class="grid-3">
+          <div class="card"><h3>Activation</h3><p>ReLU hidden layers + Softmax output.</p></div>
+          <div class="card"><h3>Regularization</h3><p>Dropout layers reduce overfitting risk.</p></div>
+          <div class="card"><h3>Goal</h3><p>Reliable high/low market-state prediction.</p></div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Primary Neural Stack</span><span>Structured Depth</span></div>
+    </section>
+
+    <section class="slide" id="slide-16">
+      <div class="slide-header"><span class="title-chip">16 DNN Architecture</span><span class="slide-count">16 / 35</span></div>
+      <div class="content grid-3">
+        <div class="card"><span class="icon-badge"><i class="fa-solid fa-layer-group"></i></span><h3>Deeper Network</h3><p>Additional hidden layers capture higher-order interactions.</p></div>
+        <div class="card"><span class="icon-badge"><i class="fa-solid fa-wave-square"></i></span><h3>Batch Normalization</h3><p>Stabilizes training and accelerates convergence.</p></div>
+        <div class="card"><span class="icon-badge"><i class="fa-solid fa-sliders"></i></span><h3>LR Scheduling</h3><p>Adaptive learning rates improve optimization trajectory.</p></div>
+      </div>
+      <div class="slide-footer"><span>Advanced Neural Design</span><span>Training Stability</span></div>
+    </section>
+
+    <section class="slide" id="slide-17">
+      <div class="slide-header"><span class="title-chip">17 Classification Models</span><span class="slide-count">17 / 35</span></div>
+      <div class="content grid-3">
+        <div class="card"><h3><i class="fa-solid fa-chart-line"></i> Logistic Regression</h3><p>Linear probabilistic baseline.</p></div>
+        <div class="card"><h3><i class="fa-solid fa-tree"></i> Decision Tree</h3><p>Rule-based splitting and interpretability.</p></div>
+        <div class="card"><h3><i class="fa-solid fa-forest"></i> Random Forest</h3><p>Ensemble robustness and high accuracy.</p></div>
+        <div class="card"><h3><i class="fa-solid fa-bolt"></i> Gradient Boosting</h3><p>Sequential error-focused learning.</p></div>
+        <div class="card"><h3><i class="fa-solid fa-vector-square"></i> SVM</h3><p>Margin maximization classification.</p></div>
+        <div class="card"><h3><i class="fa-solid fa-people-arrows"></i> KNN</h3><p>Distance-based local inference.</p></div>
+      </div>
+      <div class="slide-footer"><span>Classical Models</span><span>Diverse Learning Paradigms</span></div>
+    </section>
+
+    <section class="slide" id="slide-18">
+      <div class="slide-header"><span class="title-chip">18 Clustering Models</span><span class="slide-count">18 / 35</span></div>
+      <div class="content grid-3">
+        <div class="card"><h3>K-Means</h3><p>Partitions data into centroid-based clusters.</p></div>
+        <div class="card"><h3>DBSCAN</h3><p>Density-based clustering with noise detection.</p></div>
+        <div class="card"><h3>Hierarchical</h3><p>Tree-like agglomerative grouping.</p></div>
+      </div>
+      <div class="slide-footer"><span>Unsupervised Layer</span><span>Pattern Discovery</span></div>
+    </section>
+
+    <section class="slide" id="slide-19">
+      <div class="slide-header"><span class="title-chip">19 K-Means Visualization</span><span class="slide-count">19 / 35</span></div>
+      <div class="content grid-2">
+        <div>
+          <h2>Cluster Separation in Price Space</h2>
+          <p>K-Means identifies recurring market structure by grouping similar price patterns around learned centroids.</p>
+        </div>
+        <div class="canvas-wrap"><canvas id="chartKMeans"></canvas></div>
+      </div>
+      <div class="slide-footer"><span>K-Means</span><span>Cluster Geometry</span></div>
+    </section>
+
+    <section class="slide" id="slide-20">
+      <div class="slide-header"><span class="title-chip">20 DBSCAN Insight</span><span class="slide-count">20 / 35</span></div>
+      <div class="content grid-2">
+        <div class="card">
+          <h2>Outlier Detection Strength</h2>
+          <ul>
+            <li>Detects irregular price spikes.</li>
+            <li>Does not force all points into clusters.</li>
+            <li>Useful for anomaly-driven market alerts.</li>
+          </ul>
+        </div>
+        <div class="canvas-wrap"><canvas id="chartDbscan"></canvas></div>
+      </div>
+      <div class="slide-footer"><span>DBSCAN</span><span>Noise-Aware Clustering</span></div>
+    </section>
+
+    <section class="slide" id="slide-21">
+      <div class="slide-header"><span class="title-chip">21 Performance Comparison</span><span class="slide-count">21 / 35</span></div>
+      <div class="content">
+        <h2>Accuracy Benchmark</h2>
+        <div class="canvas-wrap" style="height: 44vh;"><canvas id="chartPerf"></canvas></div>
+      </div>
+      <div class="slide-footer"><span>Random Forest: ~99.7%</span><span>Gradient Boosting: ~99.7%</span></div>
+    </section>
+
+    <section class="slide" id="slide-22">
+      <div class="slide-header"><span class="title-chip">22 Key Insight</span><span class="slide-count">22 / 35</span></div>
+      <div class="content">
+        <div class="card">
+          <h2>Classical ML Outperformed Deep Learning</h2>
+          <p>For structured tabular market data, optimized ensemble methods delivered marginally better accuracy and efficiency than deeper neural networks.</p>
+          <p class="kpi">ML > DL for this dataset profile</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Insight</span><span>Model-data fit matters</span></div>
+    </section>
+
+    <section class="slide" id="slide-23">
+      <div class="slide-header"><span class="title-chip">23 ANN vs DNN</span><span class="slide-count">23 / 35</span></div>
+      <div class="content grid-2">
+        <div class="card">
+          <h2>Comparative Snapshot</h2>
+          <ul>
+            <li>ANN: Faster and compact</li>
+            <li>DNN: Slightly better generalization</li>
+            <li>Gap remains narrow on tabular features</li>
+          </ul>
+        </div>
+        <div class="canvas-wrap"><canvas id="chartAnnDnn"></canvas></div>
+      </div>
+      <div class="slide-footer"><span>ANN vs DNN</span><span>Tradeoff Analysis</span></div>
+    </section>
+
+    <section class="slide" id="slide-24">
+      <div class="slide-header"><span class="title-chip">24 Clustering Results</span><span class="slide-count">24 / 35</span></div>
+      <div class="content grid-2">
+        <div class="card">
+          <h2>DBSCAN Delivered Best Practical Insight</h2>
+          <p>DBSCAN captured dense market behavior while preserving anomaly signals that are critical for risk-aware selling recommendations.</p>
+        </div>
+        <div class="card">
+          <h3>Why DBSCAN Wins</h3>
+          <ul>
+            <li>Noise-aware grouping</li>
+            <li>No forced cluster assumption</li>
+            <li>Strong on irregular market patterns</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Clustering Conclusion</span><span>DBSCAN Best</span></div>
+    </section>
+
+    <section class="slide" id="slide-25">
+      <div class="slide-header"><span class="title-chip">25 Final System Output</span><span class="slide-count">25 / 35</span></div>
+      <div class="content compare">
+        <div class="card">
+          <h2><i class="fa-solid fa-circle-check"></i> SELL</h2>
+          <p>When predicted market state is high-value and confidence exceeds threshold.</p>
+        </div>
+        <div class="card">
+          <h2><i class="fa-solid fa-hourglass-half"></i> HOLD</h2>
+          <p>When expected near-term value gain is probable based on trend and volatility context.</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Decision Layer</span><span>Actionable Signals</span></div>
+    </section>
+
+    <section class="slide" id="slide-26">
+      <div class="slide-header"><span class="title-chip">26 Real-world Impact</span><span class="slide-count">26 / 35</span></div>
+      <div class="content grid-2">
+        <div class="card">
+          <span class="icon-badge"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+          <h2>Higher Farmer Income</h2>
+          <p>Improved timing and crop intelligence can increase net returns.</p>
+        </div>
+        <div class="card">
+          <span class="icon-badge"><i class="fa-solid fa-shield-heart"></i></span>
+          <h2>Reduced Uncertainty</h2>
+          <p>Decision support lowers market stress and planning ambiguity.</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Social Impact</span><span>Economic Stability</span></div>
+    </section>
+
+    <section class="slide" id="slide-27">
+      <div class="slide-header"><span class="title-chip">27 SDG Alignment</span><span class="slide-count">27 / 35</span></div>
+      <div class="content grid-3">
+        <div class="card"><h3>SDG 2: Zero Hunger</h3><p>Supports resilient and productive agricultural outcomes.</p></div>
+        <div class="card"><h3>SDG 8: Economic Growth</h3><p>Strengthens rural income opportunities via AI-led market strategy.</p></div>
+        <div class="card"><h3>SDG 12: Responsible Consumption</h3><p>Improves supply timing to reduce wastage and inefficiency.</p></div>
+      </div>
+      <div class="slide-footer"><span>Sustainability Link</span><span>Aligned with UN Goals</span></div>
+    </section>
+
+    <section class="slide" id="slide-28">
+      <div class="slide-header"><span class="title-chip">28 NLP Integration</span><span class="slide-count">28 / 35</span></div>
+      <div class="content">
+        <h2>NLP + Prediction = Smarter Intelligence</h2>
+        <div class="pipeline">
+          <div class="node">Market News</div><div class="arrow">→</div>
+          <div class="node">Sentiment Analysis</div><div class="arrow">→</div>
+          <div class="node">Topic Modeling</div><div class="arrow">→</div>
+          <div class="node">ANN Predictions</div><div class="arrow">→</div>
+          <div class="node">Enhanced Signal</div>
+        </div>
+        <div class="card">
+          <p>Text intelligence layers can capture policy shifts, demand shocks, and local trend narratives that pure numeric models may miss.</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>NLP Extension</span><span>Context-aware Forecasting</span></div>
+    </section>
+
+    <section class="slide" id="slide-29">
+      <div class="slide-header"><span class="title-chip">29 Hyperparameters</span><span class="slide-count">29 / 35</span></div>
+      <div class="content grid-2">
+        <div class="slider-visual card">
+          <h2>Training Control Knobs</h2>
+          <div class="slider-row"><span>Learning Rate: 0.001</span><input type="range" min="1" max="10" value="3" /></div>
+          <div class="slider-row"><span>Batch Size: 64</span><input type="range" min="1" max="10" value="6" /></div>
+          <div class="slider-row"><span>Hidden Layers: 3</span><input type="range" min="1" max="10" value="4" /></div>
+          <div class="slider-row"><span>Activation: ReLU / Softmax</span><input type="range" min="1" max="10" value="8" /></div>
+        </div>
+        <div class="canvas-wrap"><canvas id="chartHyper"></canvas></div>
+      </div>
+      <div class="slide-footer"><span>Hyperparameter Insights</span><span>Optimization Controls</span></div>
+    </section>
+
+    <section class="slide" id="slide-30">
+      <div class="slide-header"><span class="title-chip">30 Underfitting vs Overfitting</span><span class="slide-count">30 / 35</span></div>
+      <div class="content grid-2">
+        <div class="card">
+          <h2>Generalization Balance</h2>
+          <ul>
+            <li>Underfitting: model too simple, high bias.</li>
+            <li>Overfitting: model memorizes noise, poor test performance.</li>
+            <li>Goal: optimal validation performance zone.</li>
+          </ul>
+        </div>
+        <div class="canvas-wrap"><canvas id="chartFit"></canvas></div>
+      </div>
+      <div class="slide-footer"><span>Bias-Variance Tradeoff</span><span>Model Health</span></div>
+    </section>
+
+    <section class="slide" id="slide-31">
+      <div class="slide-header"><span class="title-chip">31 Hyperparameter Tuning</span><span class="slide-count">31 / 35</span></div>
+      <div class="content grid-2">
+        <div class="card">
+          <h2>Random Search</h2>
+          <p>Efficiently explores wide parameter spaces with reduced compute cost.</p>
+        </div>
+        <div class="card">
+          <h2>Bayesian Optimization</h2>
+          <p>Builds probabilistic surrogate to find near-optimal settings faster and more scalably.</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Tuning Strategy</span><span>Scalable Optimization</span></div>
+    </section>
+
+    <section class="slide" id="slide-32">
+      <div class="slide-header"><span class="title-chip">32 Limitations</span><span class="slide-count">32 / 35</span></div>
+      <div class="content grid-2">
+        <div class="card"><h2>Data Dependency</h2><p>Prediction quality depends on data freshness and coverage consistency.</p></div>
+        <div class="card"><h2>Regional Bias</h2><p>Patterns in one geography may not directly transfer to others without adaptation.</p></div>
+      </div>
+      <div class="slide-footer"><span>Known Constraints</span><span>Scope Awareness</span></div>
+    </section>
+
+    <section class="slide" id="slide-33">
+      <div class="slide-header"><span class="title-chip">33 Future Work</span><span class="slide-count">33 / 35</span></div>
+      <div class="content grid-2">
+        <div class="card"><h2>Weather Data Integration</h2><p>Add climate variables to improve crop-market context and risk prediction.</p></div>
+        <div class="card"><h2>Real-time Deployment</h2><p>Build API + dashboard architecture for live farmer-facing recommendations.</p></div>
+      </div>
+      <div class="slide-footer"><span>Roadmap</span><span>Towards Production Intelligence</span></div>
+    </section>
+
+    <section class="slide" id="slide-34">
+      <div class="slide-header"><span class="title-chip">34 Conclusion</span><span class="slide-count">34 / 35</span></div>
+      <div class="content">
+        <div class="card">
+          <h2>AI Can Transform Agricultural Decision-Making</h2>
+          <p>ACMIA demonstrates that predictive analytics can convert raw market data into strategic, farmer-centric recommendations with measurable impact.</p>
+          <p class="kpi">From Data to Better Decisions</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Final Takeaway</span><span>Intelligence for Agriculture</span></div>
+    </section>
+
+    <section class="slide" id="slide-35">
+      <div class="slide-header"><span class="title-chip">35 Thank You</span><span class="slide-count">35 / 35</span></div>
+      <div class="content" style="place-items: center; text-align: center;">
+        <h1>Thank You</h1>
+        <p class="subtitle">Questions & Discussion</p>
+        <div class="pill-row">
+          <span class="pill">Sahas Nagar</span>
+          <span class="pill">ACMIA Project</span>
+          <span class="pill">Predictive Analytics</span>
+        </div>
+      </div>
+      <div class="slide-footer"><span>End of Presentation</span><span>35 Slides</span></div>
+    </section>
+  </main>
+
+  <div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+  <div class="controls">
+    <button class="btn" id="prevBtn" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="btn" id="nextBtn" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const deck = document.getElementById('deck');
+    const progress = document.getElementById('progress');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let index = 0;
+
+    function updateDeck() {
+      deck.style.transform = `translateX(-${index * 100}vw)`;
+      slides.forEach((s, i) => s.classList.toggle('active', i === index));
+      progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+    }
+
+    function nextSlide() {
+      index = Math.min(index + 1, slides.length - 1);
+      updateDeck();
+    }
+
+    function prevSlide() {
+      index = Math.max(index - 1, 0);
+      updateDeck();
+    }
+
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+      if (e.key === 'Home') { index = 0; updateDeck(); }
+      if (e.key === 'End') { index = slides.length - 1; updateDeck(); }
+    });
+
+    // Mouse wheel navigation with a small threshold debounce.
+    let wheelLock = false;
+    window.addEventListener('wheel', (e) => {
+      if (wheelLock) return;
+      if (Math.abs(e.deltaY) < 20) return;
+      wheelLock = true;
+      if (e.deltaY > 0) nextSlide();
+      else prevSlide();
+      setTimeout(() => { wheelLock = false; }, 300);
+    }, { passive: true });
+
+    const chartCommon = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#d8e9ff' } },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.95)',
+          titleColor: '#ffffff',
+          bodyColor: '#d8e9ff',
+          borderColor: 'rgba(56, 189, 248, 0.4)',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#a6bbd8' }, grid: { color: 'rgba(255,255,255,0.09)' } },
+        y: { ticks: { color: '#a6bbd8' }, grid: { color: 'rgba(255,255,255,0.09)' } }
+      }
+    };
+
+    new Chart(document.getElementById('chartMatters'), {
+      type: 'bar',
+      data: {
+        labels: ['Income Dependence', 'Price Volatility', 'Data Adoption Need'],
+        datasets: [{
+          label: 'Relative Priority',
+          data: [88, 79, 92],
+          borderRadius: 8,
+          backgroundColor: ['#00c896', '#38bdf8', '#34d399']
+        }]
+      },
+      options: chartCommon
+    });
+
+    new Chart(document.getElementById('chartDataset'), {
+      type: 'doughnut',
+      data: {
+        labels: ['States Coverage', 'Commodity Variety', 'Record Volume'],
+        datasets: [{
+          data: [21, 143, 8578],
+          backgroundColor: ['#38bdf8', '#00c896', '#60a5fa'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#d8e9ff' } } }
+      }
+    });
+
+    new Chart(document.getElementById('chartKMeans'), {
+      type: 'scatter',
+      data: {
+        datasets: [
+          {
+            label: 'Cluster 1',
+            data: [{x: 1.2, y: 1.5}, {x: 1.4, y: 1.2}, {x: 1.1, y: 1.8}, {x: 1.6, y: 1.4}],
+            backgroundColor: '#00c896'
+          },
+          {
+            label: 'Cluster 2',
+            data: [{x: 3.2, y: 3.1}, {x: 3.5, y: 2.9}, {x: 3.8, y: 3.3}, {x: 3.4, y: 3.6}],
+            backgroundColor: '#38bdf8'
+          },
+          {
+            label: 'Cluster 3',
+            data: [{x: 5.2, y: 1.8}, {x: 5.5, y: 2.1}, {x: 5.0, y: 2.2}, {x: 5.7, y: 1.7}],
+            backgroundColor: '#34d399'
+          }
+        ]
+      },
+      options: chartCommon
+    });
+
+    new Chart(document.getElementById('chartDbscan'), {
+      type: 'pie',
+      data: {
+        labels: ['Dense Clusters', 'Border Points', 'Noise / Outliers'],
+        datasets: [{
+          data: [72, 18, 10],
+          backgroundColor: ['#00c896', '#38bdf8', '#fb7185'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#d8e9ff' } } }
+      }
+    });
+
+    new Chart(document.getElementById('chartPerf'), {
+      type: 'bar',
+      data: {
+        labels: ['Random Forest', 'Gradient Boosting', 'DNN', 'ANN'],
+        datasets: [{
+          label: 'Accuracy (%)',
+          data: [99.7, 99.7, 99.5, 99.4],
+          borderRadius: 10,
+          backgroundColor: ['#00c896', '#34d399', '#38bdf8', '#60a5fa']
+        }]
+      },
+      options: {
+        ...chartCommon,
+        scales: {
+          x: chartCommon.scales.x,
+          y: {
+            ...chartCommon.scales.y,
+            min: 98.8,
+            max: 100
+          }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('chartAnnDnn'), {
+      type: 'radar',
+      data: {
+        labels: ['Accuracy', 'Speed', 'Generalization', 'Complexity Control', 'Stability'],
+        datasets: [
+          {
+            label: 'ANN',
+            data: [99.4, 92, 90, 88, 91],
+            borderColor: '#00c896',
+            backgroundColor: 'rgba(0,200,150,0.25)',
+            pointBackgroundColor: '#00c896'
+          },
+          {
+            label: 'DNN',
+            data: [99.5, 85, 93, 82, 89],
+            borderColor: '#38bdf8',
+            backgroundColor: 'rgba(56,189,248,0.22)',
+            pointBackgroundColor: '#38bdf8'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#d8e9ff' } } },
+        scales: {
+          r: {
+            angleLines: { color: 'rgba(255,255,255,0.12)' },
+            grid: { color: 'rgba(255,255,255,0.12)' },
+            pointLabels: { color: '#b9cae1' },
+            ticks: { color: '#9cb2d0', backdropColor: 'transparent' }
+          }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('chartHyper'), {
+      type: 'line',
+      data: {
+        labels: ['Trial 1', 'Trial 2', 'Trial 3', 'Trial 4', 'Trial 5'],
+        datasets: [{
+          label: 'Validation Accuracy',
+          data: [98.8, 99.1, 99.3, 99.4, 99.5],
+          borderColor: '#00c896',
+          pointBackgroundColor: '#00c896',
+          tension: 0.35,
+          fill: true,
+          backgroundColor: 'rgba(0, 200, 150, 0.18)'
+        }]
+      },
+      options: chartCommon
+    });
+
+    new Chart(document.getElementById('chartFit'), {
+      type: 'line',
+      data: {
+        labels: ['Epoch 1', '5', '10', '15', '20', '25', '30'],
+        datasets: [
+          {
+            label: 'Training Loss',
+            data: [1.2, 0.8, 0.52, 0.34, 0.24, 0.2, 0.17],
+            borderColor: '#00c896',
+            pointRadius: 0,
+            tension: 0.35
+          },
+          {
+            label: 'Validation Loss',
+            data: [1.28, 0.9, 0.61, 0.48, 0.44, 0.49, 0.58],
+            borderColor: '#fb7185',
+            pointRadius: 0,
+            tension: 0.35
+          }
+        ]
+      },
+      options: chartCommon
+    });
+
+    updateDeck();
+  </script>
+</body>
+</html>
